@@ -1,0 +1,78 @@
+<div class="layout-wrapper min-h-screen flex flex-column surface-ground">
+
+    <!-- Premium Topbar -->
+    <div class="layout-topbar h-5rem px-4 flex justify-content-between align-items-center bg-white border-bottom-1 surface-border sticky top-0"
+        style="z-index: 1200 !important;">
+        <div class="flex align-items-center gap-3">
+            <button pButton icon="pi pi-bars" (click)="toggleSidebar()"
+                class="p-button-rounded p-button-text p-button-secondary w-3rem h-3rem"></button>
+            <div class="flex flex-column">
+                <span class="text-xl font-bold text-900 tracking-tight">Servis Hakediş</span>
+                <span class="text-xs text-500 font-medium tracking-wide uppercase">Yönetim Paneli</span>
+            </div>
+        </div>
+
+        <div class="flex align-items-center gap-2">
+            <div class="hidden sm:flex align-items-center mr-3 gap-2" *ngIf="currentUser">
+                <span
+                    class="w-2rem h-2rem border-circle bg-green-100 flex align-items-center justify-content-center text-green-600 font-bold text-sm">
+                    {{ userInitial }}
+                </span>
+                <span class="text-sm font-medium text-700">{{ userDisplay }}</span>
+            </div>
+            <p-button icon="pi pi-power-off" [rounded]="true" [text]="true" severity="danger" (onClick)="logout()"
+                pTooltip="Çıkış Yap" tooltipPosition="bottom"></p-button>
+        </div>
+    </div>
+
+    <!-- Sidebar (Drawer) -->
+    <p-drawer [(visible)]="sidebarVisible" appendTo="body" [modal]="false"
+        styleClass="w-20rem border-none shadow-6 surface-overlay">
+        <ng-template pTemplate="header">
+            <div class="flex align-items-center gap-2 px-2">
+                <div
+                    class="w-2rem h-2rem bg-primary border-circle flex align-items-center justify-content-center text-white">
+                    <i class="pi pi-box"></i>
+                </div>
+                <span class="font-bold text-xl text-900">Menü</span>
+            </div>
+        </ng-template>
+
+        <!-- Custom Sidebar Content Implementation (Replaced p-menu) -->
+        <div class="flex flex-column h-full">
+            <div class="flex-grow-1 py-3 px-2">
+                <ul class="list-none p-0 m-0 flex flex-column gap-2">
+                    <li *ngFor="let item of items">
+                        <a [routerLink]="item.routerLink"
+                            class="sidebar-link p-ripple cursor-pointer flex align-items-center p-3 border-round-lg transition-colors transition-duration-200 hover:surface-100 text-700 hover:text-900 no-underline"
+                            (click)="closeSidebar()" routerLinkActive="bg-primary-50 text-primary-600"
+                            [routerLinkActiveOptions]="{exact: false}">
+                            <i [class]="item.icon + ' text-xl mr-3'"></i>
+                            <span class="font-medium">{{ item.label }}</span>
+                        </a>
+                    </li>
+                    <li *ngIf="isAdmin" class="mt-2 pt-2 border-top-1 surface-border">
+                        <a routerLink="/admin/users"
+                            class="sidebar-link p-ripple cursor-pointer flex align-items-center p-3 border-round-lg transition-colors transition-duration-200 hover:surface-100 text-700 hover:text-900 no-underline"
+                            (click)="closeSidebar()" routerLinkActive="bg-primary-50 text-primary-600"
+                            [routerLinkActiveOptions]="{exact: false}">
+                            <i class="pi pi-users text-xl mr-3"></i>
+                            <span class="font-medium">Kullanıcı Yönetimi</span>
+                        </a>
+                    </li>
+                </ul>
+            </div>
+            <div class="p-3 border-top-1 surface-border">
+                <div class="text-xs text-500 text-center">Version 1.0.0 &bullet; Made with ❤️</div>
+            </div>
+        </div>
+    </p-drawer>
+
+    <!-- Main Content Area -->
+    <div class="layout-content flex-grow-1 p-4 md:p-6" style="position: relative; z-index: 1;">
+        <div class="content-container max-w-7xl mx-auto">
+            <router-outlet></router-outlet>
+        </div>
+    </div>
+
+</div>

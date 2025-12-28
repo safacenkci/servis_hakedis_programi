@@ -1,0 +1,1059 @@
+/* Global Imports */
+@import 'primeicons/primeicons.css';
+@import 'primeflex/primeflex.css';
+
+/* =========================================
+   FORCE LIGHT MODE - IGNORE BROWSER DARK THEME
+   ========================================= */
+
+/* Force light color scheme for all elements */
+:root {
+  color-scheme: light only !important;
+}
+
+html {
+  color-scheme: light only !important;
+}
+
+/* Override dark mode preferences */
+@media (prefers-color-scheme: dark) {
+  :root {
+    color-scheme: light only !important;
+  }
+
+  html,
+  body {
+    color-scheme: light only !important;
+    background-color: #f8fafc !important;
+    color: #1e293b !important;
+  }
+}
+
+/* 
+  Modern Design System 
+  Palette: Clean Light Theme with Emerald/Blue Accents
+*/
+:root {
+  color-scheme: light only !important;
+  --font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial,
+    sans-serif;
+
+  /* Surface Colors */
+  --surface-ground: #f8fafc;
+  --surface-section: #ffffff;
+  --surface-card: #ffffff;
+  --surface-overlay: #ffffff;
+  --surface-border: #e2e8f0;
+  --surface-hover: #f1f5f9;
+
+  /* Text Colors */
+  --text-color: #0f172a;
+  /* Slate 900 */
+  --text-color-secondary: #64748b;
+  /* Slate 500 */
+  --primary-color: #10b981;
+  /* Emerald 500 */
+  --primary-color-text: #ffffff;
+
+  /* Utilities */
+  --border-radius: 12px;
+  --card-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.03);
+  --hover-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.05), 0 4px 6px -2px rgba(0, 0, 0, 0.025);
+
+  /* FORCE LIGHT THEME SURFACES (PrimeFlex Overrides) */
+  --surface-0: #ffffff !important;
+  --surface-50: #f8fafc !important;
+  --surface-100: #f1f5f9 !important;
+  --surface-200: #e2e8f0 !important;
+  --surface-300: #cbd5e1 !important;
+  --surface-400: #94a3b8 !important;
+  --surface-500: #64748b !important;
+  --surface-600: #475569 !important;
+  --surface-700: #334155 !important;
+  --surface-800: #1e293b !important;
+  --surface-900: #0f172a !important;
+}
+
+/* =========================================
+   GLOBAL LIGHT THEME ENFORCEMENT 
+   (Overrides System Dark Mode)
+   ========================================= */
+
+body,
+.layout-wrapper {
+  background-color: #f8fafc !important;
+  /* Force Light Slate Background */
+  color: #1e293b !important;
+  /* Force Dark Text */
+  margin: 0;
+  padding: 0;
+  font-family: var(--font-family);
+  -webkit-font-smoothing: antialiased;
+}
+
+/* Force White Surfaces */
+.p-component,
+.p-card,
+.surface-card,
+.card {
+  background-color: #ffffff !important;
+  color: #1e293b !important;
+}
+
+/* Typography Overrides */
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  color: #0f172a !important;
+  /* Slate 900 */
+  margin: 0 0 1rem 0;
+  font-weight: 700;
+  letter-spacing: -0.025em;
+}
+
+.text-900 {
+  color: #0f172a !important;
+}
+
+.text-800 {
+  color: #1e293b !important;
+}
+
+.text-700 {
+  color: #334155 !important;
+}
+
+.text-600 {
+  color: #475569 !important;
+}
+
+.text-500 {
+  color: #64748b !important;
+}
+
+.text-400 {
+  color: #94a3b8 !important;
+}
+
+/* Navigation & Layout */
+.layout-topbar {
+  background-color: rgba(255, 255, 255, 0.9) !important;
+  border-bottom: 1px solid #e2e8f0 !important;
+  backdrop-filter: blur(8px);
+}
+
+.p-drawer,
+.p-sidebar {
+  background-color: #ffffff !important;
+  color: #1e293b !important;
+  border-right: 1px solid #e2e8f0 !important;
+}
+
+/* --- Component Overrides --- */
+
+/* Cards */
+.p-card {
+  border-radius: var(--border-radius);
+  box-shadow: var(--card-shadow);
+  border: 1px solid var(--surface-border) !important;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.p-card:hover {
+  box-shadow: var(--hover-shadow);
+}
+
+.p-card .p-card-content {
+  padding: 1.5rem;
+}
+
+/* Buttons */
+.p-button {
+  border-radius: 8px !important;
+  font-weight: 600 !important;
+  padding: 0.75rem 1.25rem !important;
+}
+
+.p-button-secondary {
+  background: #e2e8f0 !important;
+  color: #475569 !important;
+  border: none !important;
+}
+
+.p-button-secondary:hover {
+  background: #cbd5e1 !important;
+}
+
+/* Tables - HEADER FIX */
+.p-datatable {
+  border-radius: var(--border-radius);
+  overflow: hidden;
+  box-shadow: var(--card-shadow);
+  background-color: #ffffff !important;
+}
+
+/* FORCE TABLE BACKGROUND WHITE (Dark Mode Override) */
+.p-datatable table {
+  background-color: #ffffff !important;
+  border-color: #e2e8f0 !important;
+}
+
+.p-datatable .p-datatable-wrapper {
+  background-color: #ffffff !important;
+}
+
+/* Force Header and CAPTION White (The Black Bar Fix) */
+.p-datatable .p-datatable-header,
+.p-datatable .p-datatable-caption {
+  background-color: #ffffff !important;
+  color: #1e293b !important;
+  border-bottom: 1px solid #e2e8f0 !important;
+  border-top: none !important;
+  padding: 1.5rem !important;
+}
+
+/* Fix Input inside Header/Caption */
+.p-datatable .p-datatable-header .p-inputtext,
+.p-datatable .p-datatable-caption .p-inputtext {
+  background-color: #ffffff !important;
+  color: #1e293b !important;
+  border: 1px solid #cbd5e1 !important;
+  padding-left: 2.5rem !important;
+  /* Make space for the icon */
+  pointer-events: auto !important;
+  /* Force Clickable */
+}
+
+/* Fix Search Icon */
+.p-datatable .p-datatable-caption .pi-search,
+.p-datatable .p-datatable-header .pi-search {
+  color: #94a3b8 !important;
+  position: absolute !important;
+  top: 50% !important;
+  transform: translateY(-50%) !important;
+  left: 0.75rem !important;
+  z-index: 10 !important;
+  margin-top: 0 !important;
+}
+
+/* Ensure the span wrapper is relative so absolute icon works */
+.p-input-icon-left {
+  position: relative !important;
+  display: inline-block !important;
+  width: auto !important;
+}
+
+/* ========================
+   AGGRESSIVE BLACK BAR FIX 
+   ======================== */
+
+/* Force all table elements to use light colors */
+.p-datatable thead,
+.p-datatable tbody,
+.p-datatable tfoot,
+.p-datatable .p-datatable-thead,
+.p-datatable .p-datatable-tbody,
+.p-datatable .p-datatable-tfoot {
+  background-color: #ffffff !important;
+  border-color: #e2e8f0 !important;
+}
+
+/* Force TR elements */
+.p-datatable tr,
+.p-datatable .p-datatable-thead > tr,
+.p-datatable .p-datatable-tbody > tr {
+  background-color: transparent !important;
+  border-color: #e2e8f0 !important;
+}
+
+.p-datatable .p-datatable-thead > tr > th,
+.p-datatable .p-datatable-tbody > tr > td,
+.p-datatable .p-datatable-footer {
+  background-color: #ffffff !important;
+  color: #1e293b !important;
+  border-color: #e2e8f0 !important;
+  border-top-color: #e2e8f0 !important;
+  border-bottom-color: #e2e8f0 !important;
+}
+
+.p-datatable .p-datatable-thead > tr > th {
+  background-color: #f8fafc !important;
+  color: #475569 !important;
+  font-weight: 600;
+  text-transform: uppercase;
+  font-size: 0.75rem;
+  border-bottom: 1px solid #e2e8f0 !important;
+}
+
+/* CRITICAL: Remove any dark borders between thead and tbody */
+.p-datatable .p-datatable-thead > tr:last-child > th {
+  border-bottom: 1px solid #e2e8f0 !important;
+}
+
+.p-datatable .p-datatable-tbody > tr:first-child > td {
+  border-top: none !important;
+}
+
+.p-datatable .p-datatable-tbody > tr:hover > td {
+  background-color: #f1f5f9 !important;
+}
+
+/* Paginator Fix */
+.p-datatable .p-paginator {
+  background-color: #ffffff !important;
+  border-color: #e2e8f0 !important;
+  border-top: 1px solid #e2e8f0 !important;
+}
+
+.p-datatable .p-paginator-bottom {
+  background-color: #ffffff !important;
+}
+
+/* Dialogs */
+.p-dialog .p-dialog-header {
+  background-color: #ffffff !important;
+  color: #1e293b !important;
+  border-bottom: 1px solid #e2e8f0 !important;
+}
+
+.p-dialog .p-dialog-content {
+  background-color: #ffffff !important;
+  color: #1e293b !important;
+}
+
+.p-dialog .p-dialog-footer {
+  background-color: #f8fafc !important;
+  border-top: 1px solid #e2e8f0 !important;
+}
+
+/* Inputs */
+.p-inputtext {
+  background-color: #ffffff !important;
+  color: #1e293b !important;
+  border-radius: 8px;
+  padding: 0.75rem 1rem;
+  border: 1px solid #e2e8f0 !important;
+}
+
+.p-inputtext:enabled:focus {
+  box-shadow: 0 0 0 2px rgba(16, 185, 129, 0.2);
+  border-color: var(--primary-color) !important;
+}
+
+/* =========================================
+   PRIMENG OVERLAY COMPONENTS - DARK MODE FIX
+   ========================================= */
+
+/* DatePicker Panel (Main Fix for Black Bar) */
+.p-datepicker,
+.p-datepicker-panel,
+.p-datepicker-inline {
+  background-color: #ffffff !important;
+  color: #1e293b !important;
+  border: 1px solid #e2e8f0 !important;
+  border-radius: 12px !important;
+}
+
+/* DatePicker Header - THE BLACK BAR FIX */
+.p-datepicker-header,
+.p-datepicker .p-datepicker-header {
+  background-color: #f8fafc !important;
+  color: #1e293b !important;
+  border-bottom: 1px solid #e2e8f0 !important;
+  padding: 0.75rem !important;
+  border-radius: 12px 12px 0 0 !important;
+}
+
+/* DatePicker Navigation Buttons */
+.p-datepicker .p-datepicker-header .p-datepicker-prev,
+.p-datepicker .p-datepicker-header .p-datepicker-next,
+.p-datepicker-prev,
+.p-datepicker-next {
+  background-color: transparent !important;
+  color: #475569 !important;
+  border: none !important;
+}
+
+.p-datepicker .p-datepicker-header .p-datepicker-prev:hover,
+.p-datepicker .p-datepicker-header .p-datepicker-next:hover {
+  background-color: #e2e8f0 !important;
+  color: #1e293b !important;
+}
+
+/* DatePicker Title (Month/Year Display) */
+.p-datepicker-title,
+.p-datepicker .p-datepicker-title,
+.p-datepicker-title button,
+.p-datepicker-month,
+.p-datepicker-year,
+.p-datepicker .p-datepicker-month,
+.p-datepicker .p-datepicker-year {
+  background-color: transparent !important;
+  color: #1e293b !important;
+  font-weight: 600 !important;
+}
+
+.p-datepicker-title button:hover {
+  background-color: #e2e8f0 !important;
+}
+
+/* DatePicker Calendar Table */
+.p-datepicker-calendar-container,
+.p-datepicker table {
+  background-color: #ffffff !important;
+}
+
+.p-datepicker table th,
+.p-datepicker table td {
+  background-color: #ffffff !important;
+  color: #1e293b !important;
+  border: none !important;
+}
+
+.p-datepicker table th {
+  color: #64748b !important;
+  font-weight: 600 !important;
+}
+
+/* DatePicker Day Cells */
+.p-datepicker table td > span,
+.p-datepicker-day {
+  background-color: transparent !important;
+  color: #1e293b !important;
+  border-radius: 50% !important;
+}
+
+.p-datepicker table td > span:hover,
+.p-datepicker-day:hover {
+  background-color: #e2e8f0 !important;
+}
+
+.p-datepicker table td > span.p-highlight,
+.p-datepicker-day.p-datepicker-day-selected,
+.p-datepicker table td.p-datepicker-today > span {
+  background-color: var(--primary-color) !important;
+  color: #ffffff !important;
+}
+
+/* DatePicker Today Highlight */
+.p-datepicker table td.p-datepicker-today > span:not(.p-highlight) {
+  background-color: #e2e8f0 !important;
+  color: #1e293b !important;
+}
+
+/* Month/Year Picker View */
+.p-monthpicker,
+.p-yearpicker {
+  background-color: #ffffff !important;
+}
+
+.p-monthpicker .p-monthpicker-month,
+.p-yearpicker .p-yearpicker-year {
+  background-color: transparent !important;
+  color: #1e293b !important;
+}
+
+.p-monthpicker .p-monthpicker-month:hover,
+.p-yearpicker .p-yearpicker-year:hover {
+  background-color: #e2e8f0 !important;
+}
+
+.p-monthpicker .p-monthpicker-month.p-highlight,
+.p-yearpicker .p-yearpicker-year.p-highlight {
+  background-color: var(--primary-color) !important;
+  color: #ffffff !important;
+}
+
+/* =========================================
+   SELECT / DROPDOWN PANEL FIX
+   ========================================= */
+
+.p-select-overlay,
+.p-select-panel,
+.p-dropdown-panel,
+.p-listbox {
+  background-color: #ffffff !important;
+  color: #1e293b !important;
+  border: 1px solid #e2e8f0 !important;
+  border-radius: 8px !important;
+  box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1) !important;
+}
+
+.p-select-header,
+.p-dropdown-header {
+  background-color: #f8fafc !important;
+  border-bottom: 1px solid #e2e8f0 !important;
+}
+
+.p-select-list,
+.p-dropdown-items,
+.p-listbox-list {
+  background-color: #ffffff !important;
+}
+
+.p-select-option,
+.p-select-list-item,
+.p-dropdown-item,
+.p-listbox-item {
+  background-color: #ffffff !important;
+  color: #1e293b !important;
+}
+
+.p-select-option:hover,
+.p-select-list-item:hover,
+.p-dropdown-item:hover,
+.p-listbox-item:hover {
+  background-color: #f1f5f9 !important;
+}
+
+.p-select-option.p-highlight,
+.p-select-list-item.p-highlight,
+.p-dropdown-item.p-highlight,
+.p-listbox-item.p-highlight {
+  background-color: rgba(16, 185, 129, 0.1) !important;
+  color: var(--primary-color) !important;
+}
+
+/* Filter Input in Dropdowns */
+.p-select-filter,
+.p-dropdown-filter {
+  background-color: #ffffff !important;
+  color: #1e293b !important;
+  border: 1px solid #e2e8f0 !important;
+}
+
+/* Select/Dropdown Label Fix - Make selected value visible */
+.p-select,
+.p-dropdown {
+  background-color: #ffffff !important;
+}
+
+.p-select .p-select-label,
+.p-dropdown .p-dropdown-label,
+.p-select-label,
+.p-dropdown-label {
+  color: #1e293b !important;
+  background-color: #ffffff !important;
+}
+
+.p-select .p-select-label.p-placeholder,
+.p-dropdown .p-dropdown-label.p-placeholder,
+.p-select-label.p-placeholder,
+.p-dropdown-label.p-placeholder {
+  color: #94a3b8 !important;
+}
+
+.p-select:not(.p-disabled).p-focus .p-select-label,
+.p-dropdown:not(.p-disabled).p-focus .p-dropdown-label {
+  color: #1e293b !important;
+}
+
+.p-select .p-select-trigger,
+.p-dropdown .p-dropdown-trigger {
+  color: #64748b !important;
+}
+
+/* Force text color in Select/Dropdown - target all text elements except icons */
+.p-select .p-select-label:not(.p-placeholder),
+.p-dropdown .p-dropdown-label:not(.p-placeholder),
+.p-select input[readonly],
+.p-dropdown input[readonly] {
+  color: #1e293b !important;
+}
+
+/* Override any light text colors in Select - be more specific */
+.p-select .p-select-label,
+.p-dropdown .p-dropdown-label {
+  color: #1e293b !important;
+}
+
+/* Ensure selected value is visible in the input */
+.p-select input,
+.p-dropdown input {
+  color: #1e293b !important;
+}
+
+/* =========================================
+   OTHER OVERLAY COMPONENTS
+   ========================================= */
+
+/* Tooltip */
+.p-tooltip {
+  background-color: #1e293b !important;
+  color: #ffffff !important;
+}
+
+.p-tooltip .p-tooltip-text {
+  background-color: #1e293b !important;
+  color: #ffffff !important;
+}
+
+/* Overlay Panel */
+.p-overlaypanel {
+  background-color: #ffffff !important;
+  color: #1e293b !important;
+  border: 1px solid #e2e8f0 !important;
+}
+
+/* Confirm Dialog */
+.p-confirmdialog {
+  background-color: #ffffff !important;
+}
+
+.p-confirmdialog .p-dialog {
+  border-radius: 12px !important;
+  box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04) !important;
+  min-width: 400px !important;
+  max-width: 500px !important;
+}
+
+.p-confirmdialog .p-dialog-header {
+  background-color: #ffffff !important;
+  color: #1e293b !important;
+  border-bottom: 1px solid #e2e8f0 !important;
+  padding: 1.25rem 1.5rem !important;
+  border-radius: 12px 12px 0 0 !important;
+  text-align: left !important;
+}
+
+.p-confirmdialog .p-dialog-header .p-dialog-title {
+  font-weight: 600 !important;
+  font-size: 1.125rem !important;
+  color: #0f172a !important;
+  text-align: left !important;
+}
+
+.p-confirmdialog .p-dialog-content {
+  background-color: #ffffff !important;
+  color: #1e293b !important;
+  padding: 1.5rem !important;
+  text-align: left !important;
+}
+
+.p-confirmdialog .p-dialog-content .p-confirmdialog-message {
+  text-align: left !important;
+  color: #475569 !important;
+  font-size: 0.9375rem !important;
+  line-height: 1.6 !important;
+  margin: 0 !important;
+  padding: 0 !important;
+}
+
+.p-confirmdialog .p-dialog-content .p-confirmdialog-icon {
+  margin-right: 0.75rem !important;
+  color: #f59e0b !important;
+  font-size: 1.5rem !important;
+}
+
+.p-confirmdialog .p-dialog-footer {
+  background-color: #f8fafc !important;
+  border-top: 1px solid #e2e8f0 !important;
+  padding: 1rem 1.5rem !important;
+  border-radius: 0 0 12px 12px !important;
+  display: flex !important;
+  justify-content: flex-end !important;
+  gap: 0.75rem !important;
+}
+
+.p-confirmdialog .p-dialog-footer .p-button {
+  min-width: 80px !important;
+  padding: 0.625rem 1.25rem !important;
+  font-weight: 500 !important;
+  border-radius: 8px !important;
+}
+
+.p-confirmdialog .p-dialog-footer .p-button.p-confirmdialog-accept {
+  background-color: #10b981 !important;
+  border-color: #10b981 !important;
+  color: #ffffff !important;
+}
+
+.p-confirmdialog .p-dialog-footer .p-button.p-confirmdialog-accept:hover {
+  background-color: #059669 !important;
+  border-color: #059669 !important;
+}
+
+.p-confirmdialog .p-dialog-footer .p-button.p-confirmdialog-reject {
+  background-color: #ffffff !important;
+  border-color: #e2e8f0 !important;
+  color: #475569 !important;
+}
+
+.p-confirmdialog .p-dialog-footer .p-button.p-confirmdialog-reject:hover {
+  background-color: #f1f5f9 !important;
+  border-color: #cbd5e1 !important;
+  color: #1e293b !important;
+}
+
+/* Menu Components */
+.p-menu,
+.p-menubar,
+.p-contextmenu,
+.p-tieredmenu {
+  background-color: #ffffff !important;
+  color: #1e293b !important;
+  border: 1px solid #e2e8f0 !important;
+}
+
+.p-menu .p-menuitem,
+.p-menuitem-link {
+  background-color: transparent !important;
+  color: #1e293b !important;
+}
+
+.p-menu .p-menuitem:hover,
+.p-menuitem-link:hover {
+  background-color: #f1f5f9 !important;
+}
+
+/* InputNumber Buttons */
+.p-inputnumber-button {
+  background-color: #f1f5f9 !important;
+  color: #475569 !important;
+  border: 1px solid #e2e8f0 !important;
+}
+
+.p-inputnumber-button:hover {
+  background-color: #e2e8f0 !important;
+}
+
+/* Checkbox */
+.p-checkbox .p-checkbox-box {
+  background-color: #ffffff !important;
+  border: 1px solid #cbd5e1 !important;
+}
+
+.p-checkbox .p-checkbox-box.p-highlight {
+  background-color: var(--primary-color) !important;
+  border-color: var(--primary-color) !important;
+}
+
+/* Textarea */
+.p-textarea,
+textarea.p-inputtextarea {
+  background-color: #ffffff !important;
+  color: #1e293b !important;
+  border: 1px solid #e2e8f0 !important;
+}
+
+/* =========================================
+   MODERN TOAST NOTIFICATIONS - BOTTOM RIGHT
+   ========================================= */
+
+/* Toast Container - Bottom Right Position - Transparent Background */
+.p-toast {
+  bottom: 1.5rem !important;
+  right: 1.5rem !important;
+  z-index: 10000 !important; /* Higher than dialog overlay (usually 1100) */
+  max-width: 360px !important;
+  pointer-events: none !important;
+  background: transparent !important;
+  border: none !important;
+  box-shadow: none !important;
+  padding: 0 !important;
+  margin: 0 !important;
+  position: fixed !important;
+}
+
+.p-toast-bottom-right {
+  bottom: 1.5rem !important;
+  right: 1.5rem !important;
+  background: transparent !important;
+  border: none !important;
+  box-shadow: none !important;
+}
+
+/* Toast Message Container - Also Transparent */
+.p-toast-message-container {
+  background: transparent !important;
+  border: none !important;
+  box-shadow: none !important;
+  padding: 0 !important;
+  margin: 0 !important;
+}
+
+/* All Toast Wrapper Elements - Transparent */
+.p-toast .p-toast-message-container,
+.p-toast .p-component,
+.p-toast > div,
+.p-toast > ul,
+.p-toast > li,
+.p-toast > * {
+  background: transparent !important;
+  border: none !important;
+  box-shadow: none !important;
+  padding: 0 !important;
+  margin: 0 !important;
+}
+
+/* Toast List Container */
+.p-toast-message-list,
+.p-toast-list {
+  background: transparent !important;
+  border: none !important;
+  box-shadow: none !important;
+  padding: 0 !important;
+  margin: 0 !important;
+  list-style: none !important;
+}
+
+/* Toast Item */
+.p-toast-message-item,
+.p-toast-item {
+  background: transparent !important;
+  border: none !important;
+  box-shadow: none !important;
+  padding: 0 !important;
+  margin: 0 !important;
+}
+
+/* Force all child elements of toast to be transparent except the message itself */
+.p-toast *:not(.p-toast-message) {
+  background: transparent !important;
+  border: none !important;
+  box-shadow: none !important;
+}
+
+/* Ensure toast messages are above dialog overlays */
+.p-toast-message {
+  z-index: 10001 !important;
+  position: relative !important;
+}
+
+/* Dialog overlay should be below toast */
+.p-dialog-mask,
+.p-overlaypanel-mask {
+  z-index: 1100 !important;
+}
+
+.p-dialog {
+  z-index: 1101 !important;
+}
+
+/* Individual Toast Message - Clean White Background */
+.p-toast-message {
+  background: #ffffff !important;
+  border: none !important;
+  border-radius: 12px !important;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.12), 0 2px 8px rgba(0, 0, 0, 0.08) !important;
+  padding: 0.75rem 1rem !important;
+  margin-bottom: 0.625rem !important;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
+  pointer-events: auto !important;
+  position: relative !important;
+  overflow: hidden !important;
+}
+
+.p-toast-message::before {
+  content: '' !important;
+  position: absolute !important;
+  top: 0 !important;
+  left: 0 !important;
+  width: 4px !important;
+  height: 100% !important;
+  background: currentColor !important;
+}
+
+.p-toast-message:hover {
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.15), 0 4px 12px rgba(0, 0, 0, 0.1) !important;
+  transform: translateY(-2px) scale(1.01) !important;
+}
+
+/* Toast Icon Container - Modern Design */
+.p-toast-message-icon {
+  width: 2.25rem !important;
+  height: 2.25rem !important;
+  border-radius: 10px !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  margin-right: 0.75rem !important;
+  flex-shrink: 0 !important;
+  font-size: 1.125rem !important;
+  position: relative !important;
+}
+
+/* Success Toast */
+.p-toast-message-success::before {
+  background: #10b981 !important;
+}
+
+.p-toast-message-success .p-toast-message-icon {
+  background: #ecfdf5 !important;
+  color: #10b981 !important;
+}
+
+/* Error Toast */
+.p-toast-message-error::before {
+  background: #ef4444 !important;
+}
+
+.p-toast-message-error .p-toast-message-icon {
+  background: #fef2f2 !important;
+  color: #ef4444 !important;
+}
+
+/* Warning Toast */
+.p-toast-message-warn::before {
+  background: #f59e0b !important;
+}
+
+.p-toast-message-warn .p-toast-message-icon {
+  background: #fffbeb !important;
+  color: #f59e0b !important;
+}
+
+/* Info Toast */
+.p-toast-message-info::before {
+  background: #3b82f6 !important;
+}
+
+.p-toast-message-info .p-toast-message-icon {
+  background: #eff6ff !important;
+  color: #3b82f6 !important;
+}
+
+/* Toast Content */
+.p-toast-message-content {
+  display: flex !important;
+  align-items: flex-start !important;
+  gap: 0.625rem !important;
+  flex: 1 !important;
+}
+
+/* Toast Summary (Title) */
+.p-toast-summary {
+  font-weight: 600 !important;
+  font-size: 0.875rem !important;
+  color: #0f172a !important;
+  margin-bottom: 0.125rem !important;
+  line-height: 1.3 !important;
+  letter-spacing: -0.01em !important;
+}
+
+/* Toast Detail (Message) */
+.p-toast-detail {
+  font-size: 0.8125rem !important;
+  color: #475569 !important;
+  line-height: 1.5 !important;
+  margin: 0 !important;
+}
+
+/* Toast Close Button */
+.p-toast-icon-close {
+  width: 1.5rem !important;
+  height: 1.5rem !important;
+  border-radius: 6px !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  color: #94a3b8 !important;
+  transition: all 0.2s ease !important;
+  margin-left: 0.5rem !important;
+  flex-shrink: 0 !important;
+  cursor: pointer !important;
+  font-size: 0.875rem !important;
+}
+
+.p-toast-icon-close:hover {
+  background-color: #f1f5f9 !important;
+  color: #64748b !important;
+}
+
+.p-toast-icon-close:active {
+  background-color: #e2e8f0 !important;
+  transform: scale(0.95) !important;
+}
+
+/* Toast Animation - Slide Up from Bottom Right */
+@keyframes slideUpRight {
+  from {
+    transform: translateX(100%);
+    opacity: 0;
+  }
+  to {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}
+
+@keyframes slideOutRight {
+  from {
+    transform: translateX(0);
+    opacity: 1;
+  }
+  to {
+    transform: translateX(100%);
+    opacity: 0;
+  }
+}
+
+.p-toast-message-enter {
+  animation: slideUpRight 0.35s cubic-bezier(0.34, 1.56, 0.64, 1) !important;
+}
+
+.p-toast-message-leave {
+  animation: slideOutRight 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
+}
+
+/* Mobile Responsive */
+@media (max-width: 640px) {
+  .p-toast {
+    bottom: 1rem !important;
+    right: 1rem !important;
+    left: 1rem !important;
+    max-width: 100% !important;
+  }
+
+  .p-toast-bottom-right {
+    bottom: 1rem !important;
+    right: 1rem !important;
+    left: 1rem !important;
+  }
+
+  .p-toast-message {
+    padding: 0.625rem 0.875rem !important;
+    border-radius: 10px !important;
+  }
+
+  .p-toast-message-icon {
+    width: 2rem !important;
+    height: 2rem !important;
+    font-size: 1rem !important;
+  }
+}
+
+/* =========================================
+   DATEPICKER INPUT GROUP FIX
+   ========================================= */
+
+/* Make datepicker input and button look unified */
+.p-datepicker-input-icon-container {
+  display: flex !important;
+  width: 100% !important;
+}
+
+.p-datepicker-input-icon-container .p-inputtext {
+  border-top-right-radius: 0 !important;
+  border-bottom-right-radius: 0 !important;
+  border-right: none !important;
+  flex: 1 !important;
+}
+
+.p-datepicker-input-icon-container .p-datepicker-trigger,
+.p-datepicker-input-icon-container button {
+  border-top-left-radius: 0 !important;
+  border-bottom-left-radius: 0 !important;
+  border: 1px solid #e2e8f0 !important;
+  background-color: #f8fafc !important;
+  color: #475569 !important;
+  min-width: 2.5rem !important;
+}
+
+.p-datepicker-input-icon-container .p-datepicker-trigger:hover,
+.p-datepicker-input-icon-container button:hover {
+  background-color: #e2e8f0 !important;
+}

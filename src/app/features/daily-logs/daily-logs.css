@@ -1,0 +1,122 @@
+/* Dark Bar Fix for Daily Logs Table */
+.p-datatable .p-datatable-caption {
+    background-color: #ffffff !important;
+    border-bottom: 1px solid #e2e8f0 !important;
+    padding: 1rem !important;
+    color: #1e293b !important;
+}
+
+.p-input-icon-left>i {
+    z-index: 10;
+    color: #64748b !important;
+}
+
+.p-inputtext:enabled:focus {
+    box-shadow: 0 0 0 2px rgba(16, 185, 129, 0.2);
+    border-color: #10b981 !important;
+}
+
+/* DatePicker Styling - Simplified */
+::ng-deep .p-datepicker {
+    border-radius: 0.5rem !important;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06) !important;
+}
+
+::ng-deep .p-datepicker .p-datepicker-header {
+    padding: 0.75rem !important;
+    border-radius: 0.5rem 0.5rem 0 0 !important;
+}
+
+::ng-deep .p-datepicker .p-datepicker-calendar {
+    padding: 0.5rem !important;
+}
+
+::ng-deep .p-datepicker .p-datepicker-calendar th {
+    padding: 0.5rem !important;
+    font-weight: 600 !important;
+}
+
+::ng-deep .p-datepicker .p-datepicker-calendar td > span {
+    width: 2rem !important;
+    height: 2rem !important;
+    border-radius: 0.375rem !important;
+}
+
+::ng-deep .p-datepicker-input {
+    width: 100% !important;
+    padding: 0.625rem 0.75rem !important;
+    border-radius: 0.5rem !important;
+}
+
+::ng-deep .p-datepicker-trigger {
+    border-radius: 0 0.5rem 0.5rem 0 !important;
+    background-color: #f8fafc !important;
+    border-left: none !important;
+}
+
+::ng-deep .p-datepicker-trigger:hover {
+    background-color: #e2e8f0 !important;
+}
+
+/* Select/Dropdown Label Fix - Make selected value visible */
+::ng-deep .p-select .p-select-label,
+::ng-deep .p-dropdown .p-dropdown-label {
+    color: #1e293b !important;
+    background-color: #ffffff !important;
+}
+
+::ng-deep .p-select .p-select-label.p-placeholder,
+::ng-deep .p-dropdown .p-dropdown-label.p-placeholder {
+    color: #94a3b8 !important;
+}
+
+::ng-deep .p-select:not(.p-disabled).p-focus .p-select-label,
+::ng-deep .p-dropdown:not(.p-disabled).p-focus .p-dropdown-label {
+    color: #1e293b !important;
+}
+
+::ng-deep .p-select .p-select-trigger,
+::ng-deep .p-dropdown .p-dropdown-trigger {
+    color: #64748b !important;
+}
+
+/* Vehicle Summary Cards */
+.vehicle-summary-card {
+    transition: all 0.3s ease;
+    border: 1px solid var(--surface-border);
+    background: linear-gradient(135deg, var(--surface-card) 0%, var(--surface-ground) 100%);
+}
+
+.vehicle-summary-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 12px 40px rgba(0, 0, 0, 0.12) !important;
+    border-color: var(--primary-color);
+}
+
+/* Month Selector Styling */
+.month-selector {
+    background: linear-gradient(135deg, var(--primary-50) 0%, var(--surface-card) 100%);
+}
+
+/* Table Footer */
+.p-datatable .p-datatable-tfoot>tr>td {
+    background-color: #f8fafc !important;
+    font-weight: 600;
+}
+
+/* Summary Badge Animation */
+@keyframes pulse {
+
+    0%,
+    100% {
+        opacity: 1;
+    }
+
+    50% {
+        opacity: 0.7;
+    }
+}
+
+.grand-total-pulse {
+    animation: pulse 2s ease-in-out infinite;
+}

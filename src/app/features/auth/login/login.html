@@ -1,0 +1,76 @@
+<div class="auth-container">
+    <div class="auth-wrapper">
+        <div class="auth-card">
+            <!-- Header -->
+            <div class="auth-header">
+                <h1 class="auth-title">Giriş Yap</h1>
+                <p class="auth-subtitle">Hesabınıza giriş yaparak devam edin</p>
+            </div>
+
+            <!-- Form -->
+            <form [formGroup]="loginForm" (ngSubmit)="onLogin()" class="auth-form">
+                <!-- Email Field -->
+                <div class="form-field">
+                    <label for="email" class="form-label">E-posta Adresi</label>
+                    <div class="input-wrapper">
+                        <i class="pi pi-envelope input-icon"></i>
+                        <input 
+                            id="email" 
+                            type="email" 
+                            pInputText 
+                            class="form-input" 
+                            formControlName="email"
+                            placeholder="ornek@email.com"
+                            autocomplete="email">
+                    </div>
+                    <small *ngIf="loginForm.get('email')?.invalid && loginForm.get('email')?.touched"
+                        class="form-error">Geçerli bir e-posta adresi giriniz.</small>
+                </div>
+
+                <!-- Password Field -->
+                <div class="form-field">
+                    <label for="password" class="form-label">Şifre</label>
+                    <div class="input-wrapper">
+                        <i class="pi pi-lock input-icon"></i>
+                        <p-password 
+                            id="password" 
+                            formControlName="password" 
+                            [toggleMask]="true" 
+                            styleClass="w-full password-input"
+                            [inputStyle]="{'width':'100%', 'padding-left': '2.75rem'}"
+                            [feedback]="false" 
+                            placeholder="••••••••"
+                            autocomplete="current-password">
+                        </p-password>
+                    </div>
+                    <small *ngIf="loginForm.get('password')?.invalid && loginForm.get('password')?.touched"
+                        class="form-error">Şifre gereklidir.</small>
+                </div>
+
+                <!-- Remember Me -->
+                <div class="form-options">
+                    <div class="checkbox-wrapper">
+                        <p-checkbox id="rememberme" [binary]="true" inputId="rememberme-checkbox"></p-checkbox>
+                        <label for="rememberme-checkbox" class="checkbox-label">Beni Hatırla</label>
+                    </div>
+                </div>
+
+                <!-- Submit Button -->
+                <button 
+                    pButton 
+                    pRipple 
+                    label="Giriş Yap" 
+                    class="auth-button" 
+                    type="submit"
+                    [loading]="loading">
+                </button>
+
+                <!-- Register Link -->
+                <div class="auth-footer">
+                    <span class="auth-footer-text">Hesabınız yok mu?</span>
+                    <a routerLink="/register" class="auth-link">Kayıt Ol</a>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>

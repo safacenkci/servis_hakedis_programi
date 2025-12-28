@@ -1,0 +1,243 @@
+<div class="users-container">
+  <p-toast key="users"></p-toast>
+  <p-confirmDialog></p-confirmDialog>
+
+  <p-card>
+    <ng-template pTemplate="header">
+      <div class="p-4 border-bottom-1 surface-border">
+        <div class="flex justify-content-between align-items-center">
+          <div>
+            <h2 class="m-0 text-2xl font-bold text-900">Kullanıcı Yönetimi</h2>
+            <p class="m-0 mt-2 text-600">Tüm kullanıcıları görüntüleyin ve yönetin</p>
+          </div>
+        </div>
+      </div>
+    </ng-template>
+
+    <p-toolbar class="mb-4">
+      <div class="p-toolbar-group-start">
+        <span class="p-input-icon-left w-full md:w-auto">
+          <i class="pi pi-search"></i>
+          <input 
+            type="text" 
+            pInputText 
+            placeholder="Email veya isim ile ara..." 
+            [(ngModel)]="searchTerm"
+            (input)="filterUsers()"
+            class="w-full md:w-20rem"
+          />
+        </span>
+      </div>
+      <div class="p-toolbar-group-end">
+        <p-button 
+          icon="pi pi-refresh" 
+          label="Yenile" 
+          (onClick)="loadUsers()"
+          [loading]="loading"
+        ></p-button>
+      </div>
+    </p-toolbar>
+
+    <p-table 
+      [value]="filteredUsers" 
+      [loading]="loading"
+      [paginator]="true" 
+      [rows]="10"
+      [rowsPerPageOptions]="[10, 20, 50]"
+      [globalFilterFields]="['email', 'full_name']"
+      styleClass="p-datatable-striped"
+      [tableStyle]="{'min-width': '50rem'}"
+    >
+      <ng-template pTemplate="header">
+        <tr>
+          <th style="width: 3rem"></th>
+          <th>Email</th>
+          <th>İsim</th>
+          <th>Rol</th>
+          <th>Durum</th>
+          <th>Abonelik</th>
+          <th>Kayıt Tarihi</th>
+          <th style="width: 12rem">İşlemler</th>
+        </tr>
+      </ng-template>
+
+      <ng-template pTemplate="body" let-user>
+        <tr>
+          <td>
+            <span 
+              class="w-2rem h-2rem border-circle bg-primary-100 flex align-items-center justify-content-center text-primary-600 font-bold text-sm">
+              {{ (user.full_name || user.email || 'U')[0].toUpperCase() }}
+            </span>
+          </td>
+          <td>
+            <span class="font-medium">{{ user.email }}</span>
+          </td>
+          <td>{{ user.full_name || '-' }}</td>
+          <td>
+            <p-tag 
+              [value]="getRoleLabel(user.role)" 
+              [severity]="getRoleSeverity(user.role)"
+            ></p-tag>
+          </td>
+          <td>
+            <p-tag 
+              [value]="getStatusLabel(user)" 
+              [severity]="getStatusSeverity(user)"
+            ></p-tag>
+          </td>
+          <td>
+            <span *ngIf="user.subscription_expires_at">
+              {{ user.subscription_expires_at | date: 'dd.MM.yyyy' }}
+            </span>
+            <span *ngIf="!user.subscription_expires_at && user.subscription_active" class="text-600">
+              Süresiz
+            </span>
+            <span *ngIf="!user.subscription_active" class="text-500">
+              -
+            </span>
+          </td>
+          <td>
+            <span *ngIf="user.created_at">
+              {{ user.created_at | date: 'dd.MM.yyyy HH:mm' }}
+            </span>
+            <span *ngIf="!user.created_at" class="text-500">-</span>
+          </td>
+          <td>
+            <div class="flex gap-2">
+              <p-button 
+                icon="pi pi-pencil" 
+                [rounded]="true" 
+                [text]="true"
+                severity="info"
+                (onClick)="openEditDialog(user)"
+                pTooltip="Düzenle"
+                tooltipPosition="top"
+              ></p-button>
+              <p-button 
+                *ngIf="!user.is_approved"
+                icon="pi pi-check" 
+                [rounded]="true" 
+                [text]="true"
+                severity="success"
+                (onClick)="approveUser(user)"
+                pTooltip="Onayla"
+                tooltipPosition="top"
+              ></p-button>
+              <p-button 
+                *ngIf="user.is_approved"
+                icon="pi pi-times" 
+                [rounded]="true" 
+                [text]="true"
+                severity="danger"
+                (onClick)="rejectUser(user)"
+                pTooltip="Onayı Kaldır"
+                tooltipPosition="top"
+              ></p-button>
+            </div>
+          </td>
+        </tr>
+      </ng-template>
+
+      <ng-template pTemplate="emptymessage">
+        <tr>
+          <td colspan="8" class="text-center p-4">
+            <div class="flex flex-column align-items-center gap-2">
+              <i class="pi pi-users text-4xl text-400"></i>
+              <span class="text-600">Kullanıcı bulunamadı</span>
+            </div>
+          </td>
+        </tr>
+      </ng-template>
+    </p-table>
+  </p-card>
+
+  <!-- Edit Dialog -->
+  <p-dialog 
+    [(visible)]="showEditDialog" 
+    [modal]="true" 
+    [style]="{width: '32rem'}"
+    [closable]="true"
+    [draggable]="false"
+    [resizable]="false"
+    header="Kullanıcı Düzenle"
+    (onHide)="closeEditDialog()"
+  >
+    <div class="flex flex-column gap-4" *ngIf="selectedUser">
+      <div class="flex flex-column gap-2">
+        <label for="email" class="font-medium">Email</label>
+        <input 
+          id="email" 
+          type="text" 
+          pInputText 
+          [(ngModel)]="editForm.email" 
+          [readonly]="true"
+          class="opacity-60"
+        />
+      </div>
+
+      <div class="flex flex-column gap-2">
+        <label for="full_name" class="font-medium">İsim</label>
+        <input 
+          id="full_name" 
+          type="text" 
+          pInputText 
+          [(ngModel)]="editForm.full_name"
+        />
+      </div>
+
+      <div class="flex flex-column gap-2">
+        <label for="role" class="font-medium">Rol</label>
+        <p-select 
+          id="role"
+          [options]="roles" 
+          [(ngModel)]="editForm.role"
+          optionLabel="label" 
+          optionValue="value"
+          [style]="{width: '100%'}"
+        ></p-select>
+      </div>
+
+      <div class="flex align-items-center gap-2">
+        <p-checkbox [(ngModel)]="editForm.is_approved" [binary]="true" inputId="is_approved"></p-checkbox>
+        <label for="is_approved" class="font-medium cursor-pointer">Onaylı</label>
+      </div>
+
+      <div class="flex align-items-center gap-2">
+        <p-checkbox [(ngModel)]="editForm.subscription_active" [binary]="true" inputId="subscription_active"></p-checkbox>
+        <label for="subscription_active" class="font-medium cursor-pointer">Abonelik Aktif</label>
+      </div>
+
+      <div class="flex flex-column gap-2" *ngIf="editForm.subscription_active">
+        <label for="subscription_expires_at" class="font-medium">Abonelik Bitiş Tarihi (Opsiyonel)</label>
+        <p-datepicker 
+          id="subscription_expires_at"
+          [(ngModel)]="editForm.subscription_expires_at" 
+          [showIcon]="true"
+          dateFormat="dd.mm.yy"
+          [showButtonBar]="false"
+          [showOnFocus]="false"
+          placeholder="Tarih seçiniz"
+          inputStyleClass="w-full"
+        ></p-datepicker>
+        <small class="text-500">Boş bırakılırsa süresiz abonelik olur</small>
+      </div>
+    </div>
+
+    <ng-template pTemplate="footer">
+      <div class="flex justify-content-end gap-2">
+        <p-button 
+          label="İptal" 
+          severity="secondary" 
+          [text]="true"
+          (onClick)="closeEditDialog()"
+        ></p-button>
+        <p-button 
+          label="Kaydet" 
+          (onClick)="saveUser()"
+          [loading]="loading"
+        ></p-button>
+      </div>
+    </ng-template>
+  </p-dialog>
+</div>
+

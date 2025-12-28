@@ -1,0 +1,204 @@
+<div class="grid">
+    <div class="col-12">
+        <!-- Page Header -->
+        <div class="flex flex-column md:flex-row md:justify-content-between md:align-items-center mb-4">
+            <div>
+                <h1 class="text-3xl font-bold text-900 mb-2">Şirketler</h1>
+                <span class="text-500 font-medium">Müşteri firmalarınızı buradan yönetebilirsiniz.</span>
+            </div>
+            <div class="mt-3 md:mt-0">
+                <button pButton pRipple label="Yeni Şirket Ekle" icon="pi pi-plus"
+                    class="p-button-primary border-round-lg shadow-2" (click)="openNew()"></button>
+            </div>
+        </div>
+
+        <!-- Table Card -->
+        <div class="card p-0 border-none shadow-2 border-round-xl overflow-hidden">
+            <p-table #dt [value]="companies" [rows]="10" [paginator]="true" [rowsPerPageOptions]="[10,20,30]"
+                [globalFilterFields]="['name','address']" responsiveLayout="scroll" [rowHover]="true" dataKey="id"
+                [loading]="loading" styleClass="p-datatable-sm"
+                currentPageReportTemplate="Toplam {totalRecords} kayıttan {first} ile {last} arası gösteriliyor"
+                [showCurrentPageReport]="true">
+
+                <ng-template pTemplate="caption">
+                    <div
+                        class="flex justify-content-between align-items-center p-3 surface-0 border-bottom-1 surface-border">
+                        <span class="p-input-icon-left w-full md:w-auto">
+                            <i class="pi pi-search text-500"></i>
+                            <input pInputText type="text"
+                                (input)="dt.filterGlobal($any($event.target).value, 'contains')"
+                                placeholder="Şirket Ara..." class="w-full md:w-20rem border-round-lg pl-5" />
+                        </span>
+                        <button pButton pRipple icon="pi pi-refresh"
+                            class="p-button-text p-button-secondary p-button-rounded" (click)="loadCompanies()"
+                            pTooltip="Listeyi Yenile"></button>
+                    </div>
+                </ng-template>
+
+                <ng-template pTemplate="header">
+                    <tr class="bg-gray-50 text-600 uppercase text-sm font-semibold">
+                        <th style="width: 3rem">#</th>
+                        <th pSortableColumn="name" class="white-space-nowrap">Şirket Adı <p-sortIcon
+                                field="name"></p-sortIcon></th>
+                        <th pSortableColumn="address">Adres <p-sortIcon field="address"></p-sortIcon></th>
+                        <th *ngIf="isAdmin" pSortableColumn="profiles.email">Kullanıcı <p-sortIcon field="profiles.email"></p-sortIcon></th>
+                        <th class="text-right">İşlemler</th>
+                    </tr>
+                </ng-template>
+
+                <ng-template pTemplate="body" let-company let-i="rowIndex">
+                    <tr class="transition-colors transition-duration-200 hover:surface-hover">
+                        <td class="text-500 font-medium">{{i + 1}}</td>
+                        <td>
+                            <div class="font-medium text-900">{{company.name}}</div>
+                        </td>
+                        <td class="text-600">
+                            {{company.address || '-'}}
+                        </td>
+                        <td *ngIf="isAdmin" class="text-600">
+                            <div class="flex align-items-center gap-2">
+                                <span class="w-2rem h-2rem border-circle bg-primary-100 flex align-items-center justify-content-center text-primary-600 font-bold text-sm">
+                                    {{(company.profiles?.full_name || company.profiles?.email || 'U')[0].toUpperCase()}}
+                                </span>
+                                <div class="flex flex-column">
+                                    <span class="text-sm font-medium">{{company.profiles?.full_name || '-'}}</span>
+                                    <span class="text-xs text-500">{{company.profiles?.email || '-'}}</span>
+                                </div>
+                            </div>
+                        </td>
+                        <td class="text-right">
+                            <div class="flex justify-content-end gap-2">
+                                <button pButton pRipple icon="pi pi-pencil"
+                                    class="p-button-rounded p-button-text p-button-info" (click)="editCompany(company)"
+                                    pTooltip="Düzenle"></button>
+                                <button pButton pRipple icon="pi pi-trash"
+                                    class="p-button-rounded p-button-text p-button-danger"
+                                    (click)="deleteCompany(company)" pTooltip="Sil"></button>
+                            </div>
+                        </td>
+                    </tr>
+                </ng-template>
+
+                <ng-template pTemplate="emptymessage">
+                    <tr>
+                        <td [attr.colspan]="isAdmin ? 5 : 4" class="text-center p-5">
+                            <i class="pi pi-folder-open text-5xl text-400 mb-3"></i>
+                            <div class="text-700 font-medium">Henüz kayıtlı şirket yok.</div>
+                        </td>
+                    </tr>
+                </ng-template>
+            </p-table>
+        </div>
+
+        <!-- Edit Dialog -->
+        <p-dialog [(visible)]="companyDialog" [style]="{width: '500px'}" header="Şirket Bilgileri" [modal]="true"
+            class="p-fluid" [draggable]="false" [resizable]="false">
+            <ng-template pTemplate="content">
+                <form [formGroup]="companyForm" class="flex flex-column gap-4 pt-3">
+
+                    <!-- Company Name -->
+                    <div class="field mb-0">
+                        <label for="name" class="block text-900 font-semibold mb-2">Şirket Adı</label>
+                        <input type="text" pInputText id="name" formControlName="name" required autofocus
+                            placeholder="Örn: ABC Lojistik A.Ş." class="w-full" />
+                        <small class="p-error block mt-2" *ngIf="submitted && companyForm.get('name')?.invalid">
+                            Şirket adı zorunludur.
+                        </small>
+                    </div>
+
+                    <!-- Address -->
+                    <div class="field mb-0">
+                        <label for="address" class="block text-900 font-semibold mb-2">Adres</label>
+                        <textarea id="address" pInputTextarea formControlName="address" rows="3" class="w-full"
+                            placeholder="Şirket açık adresi..."></textarea>
+                    </div>
+                </form>
+            </ng-template>
+
+            <ng-template pTemplate="footer">
+                <div class="flex justify-content-end gap-2 border-top-1 surface-border pt-3">
+                    <button pButton pRipple label="İptal" icon="pi pi-times"
+                        class="p-button-text p-button-secondary border-round-lg" (click)="hideDialog()"></button>
+                    <button pButton pRipple label="Kaydet" icon="pi pi-check"
+                        class="p-button-primary border-round-lg px-4" (click)="saveCompany()"></button>
+                </div>
+            </ng-template>
+        </p-dialog>
+
+        <!-- Bağlı Kayıtlar Dialog -->
+        <p-dialog [(visible)]="dependencyDialog" [style]="{width: '600px'}" 
+            [header]="companyDependencies.contracts.length > 0 ? 'Bağlı Kayıtlar' : 'Şirketi Silmek İster misiniz?'" 
+            [modal]="true"
+            class="p-fluid" [draggable]="false" [resizable]="false">
+            <ng-template pTemplate="content">
+                <div class="flex flex-column gap-4 pt-3">
+                    <!-- Bağlı kayıt varsa göster -->
+                    <div *ngIf="companyDependencies.contracts.length > 0">
+                        <div class="flex align-items-center gap-2 text-orange-500">
+                            <i class="pi pi-exclamation-triangle text-xl"></i>
+                            <span class="font-semibold text-lg">
+                                {{companyToDelete?.name}} şirketine bağlı kayıtlar bulunmaktadır.
+                            </span>
+                        </div>
+                        <p class="text-600 m-0">Bu şirketi silmek için önce aşağıdaki kayıtları silmeniz gerekmektedir:</p>
+                    </div>
+
+                    <!-- Bağlı Sözleşmeler -->
+                    <div *ngIf="companyDependencies.contracts.length > 0" class="border-round-lg border-1 surface-border p-3">
+                        <div class="flex align-items-center gap-2 mb-3">
+                            <i class="pi pi-file text-primary"></i>
+                            <span class="font-semibold">Sözleşmeler ({{companyDependencies.contracts.length}})</span>
+                        </div>
+                        <div class="flex flex-column gap-2">
+                            <div *ngFor="let contract of companyDependencies.contracts" class="flex align-items-center justify-content-between p-2 surface-100 border-round gap-2">
+                                <div class="flex flex-column flex-1">
+                                    <span class="font-medium">
+                                        {{contract.vehicles?.plate_number || 'Tüm Araçlar'}}
+                                    </span>
+                                    <span class="text-sm text-500">
+                                        {{contract.start_date | date:'dd.MM.yyyy'}} - 
+                                        {{contract.end_date ? (contract.end_date | date:'dd.MM.yyyy') : 'Devam Ediyor'}}
+                                    </span>
+                                </div>
+                                <div class="flex align-items-center gap-2">
+                                    <span class="font-semibold text-primary">{{contract.daily_rate | currency:'TRY':'symbol-narrow'}}</span>
+                                    <button pButton pRipple icon="pi pi-trash" 
+                                        class="p-button-rounded p-button-text p-button-danger p-button-sm"
+                                        (click)="deleteContractFromDialog(contract)"
+                                        pTooltip="Sözleşmeyi Sil"
+                                        tooltipPosition="top"></button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Tüm bağlı kayıtlar silindiğinde gösterilecek onay mesajı -->
+                    <div *ngIf="companyDependencies.contracts.length === 0" 
+                        class="border-round-lg border-1 surface-border p-4 bg-green-50">
+                        <div class="flex align-items-center gap-3 mb-3">
+                            <i class="pi pi-check-circle text-green-500 text-2xl"></i>
+                            <span class="font-semibold text-lg text-900">Tüm bağlı kayıtlar silindi.</span>
+                        </div>
+                        <p class="text-600 mb-4">Bu şirketi silmek istediğinize emin misiniz?</p>
+                        <div class="flex justify-content-end gap-2">
+                            <button pButton pRipple label="Hayır" icon="pi pi-times"
+                                class="p-button-text p-button-secondary border-round-lg"
+                                (click)="closeDependencyDialog()"></button>
+                            <button pButton pRipple label="Evet, Sil" icon="pi pi-trash"
+                                class="p-button-danger border-round-lg"
+                                (click)="deleteCompanyFromDialog()"></button>
+                        </div>
+                    </div>
+                </div>
+            </ng-template>
+
+            <ng-template pTemplate="footer">
+                <div class="flex justify-content-end gap-2" *ngIf="companyDependencies.contracts.length > 0">
+                    <button pButton pRipple label="Kapat" icon="pi pi-times"
+                        class="p-button-text p-button-secondary border-round-lg"
+                        (click)="closeDependencyDialog()"></button>
+                </div>
+            </ng-template>
+        </p-dialog>
+    </div>
+</div>

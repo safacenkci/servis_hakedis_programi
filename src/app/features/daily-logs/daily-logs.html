@@ -1,0 +1,272 @@
+<div class="grid">
+    <div class="col-12">
+        <!-- Page Header -->
+        <div class="flex flex-column md:flex-row md:justify-content-between md:align-items-center mb-4">
+            <div>
+                <h1 class="text-3xl font-bold text-900 mb-2">Günlük Kayıtlar</h1>
+                <span class="text-500 font-medium">Günlük servis kayıtlarını buradan takip edebilirsiniz.</span>
+            </div>
+            <div class="mt-3 md:mt-0">
+                <button pButton pRipple label="Yeni Kayıt Ekle" icon="pi pi-plus"
+                    class="p-button-primary border-round-lg shadow-2" (click)="openNew()"></button>
+            </div>
+        </div>
+
+        <!-- Month Selector -->
+        <div class="card shadow-2 border-round-xl mb-4 p-4">
+            <div class="flex flex-column md:flex-row justify-content-between align-items-center gap-3">
+                <div class="flex align-items-center gap-3">
+                    <button pButton pRipple icon="pi pi-chevron-left"
+                        class="p-button-rounded p-button-text p-button-secondary" (click)="previousMonth()"
+                        pTooltip="Önceki Ay"></button>
+
+                    <div class="flex align-items-center gap-2">
+                        <i class="pi pi-calendar text-primary text-xl"></i>
+                        <span class="text-xl font-bold text-900">{{getSelectedMonthLabel()}}</span>
+                    </div>
+
+                    <button pButton pRipple icon="pi pi-chevron-right"
+                        class="p-button-rounded p-button-text p-button-secondary" (click)="nextMonth()"
+                        [disabled]="isCurrentMonth()" pTooltip="Sonraki Ay"></button>
+                </div>
+
+                <div class="flex align-items-center gap-3">
+                    <span class="text-600">Aylık Toplam:</span>
+                    <span class="text-2xl font-bold text-primary">{{grandTotal | currency:'TRY':'symbol-narrow'}}</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Vehicle Monthly Summary Cards -->
+        <div class="grid mb-4" *ngIf="vehicleSummary.length > 0">
+            <div class="col-12">
+                <h2 class="text-xl font-semibold text-900 mb-3">
+                    <i class="pi pi-chart-bar mr-2 text-primary"></i>Araç Bazlı Aylık Hakediş
+                </h2>
+            </div>
+            <div class="col-12 md:col-6 lg:col-4 xl:col-3" *ngFor="let summary of vehicleSummary">
+                <div class="card shadow-2 border-round-xl p-4 h-full vehicle-summary-card">
+                    <div class="flex justify-content-between align-items-start mb-3">
+                        <div>
+                            <div class="text-lg font-bold text-900 mb-1">{{summary.plate_number}}</div>
+                            <div class="text-500 text-sm">{{summary.driver_name}}</div>
+                        </div>
+                        <div class="flex align-items-center justify-content-center bg-primary border-round-lg p-2">
+                            <i class="pi pi-car text-white text-xl"></i>
+                        </div>
+                    </div>
+
+                    <div class="text-2xl font-bold text-primary mb-3">
+                        {{summary.total_fee | currency:'TRY':'symbol-narrow'}}
+                    </div>
+
+                    <div class="flex justify-content-between text-sm">
+                        <div class="flex align-items-center">
+                            <i class="pi pi-calendar-plus mr-1 text-blue-500"></i>
+                            <span class="text-600">{{summary.log_count}} gün</span>
+                        </div>
+                        <div class="flex align-items-center" *ngIf="summary.overtime_count > 0">
+                            <i class="pi pi-clock mr-1 text-orange-500"></i>
+                            <span class="text-600">{{summary.overtime_count}} mesai</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Empty Summary Message -->
+        <div class="card shadow-2 border-round-xl p-5 mb-4 text-center" *ngIf="vehicleSummary.length === 0 && !loading">
+            <i class="pi pi-inbox text-5xl text-400 mb-3"></i>
+            <div class="text-700 font-medium">{{getSelectedMonthLabel()}} için kayıt bulunamadı.</div>
+            <div class="text-500 mt-2">Yeni kayıt ekleyerek başlayabilirsiniz.</div>
+        </div>
+
+        <!-- Table Card -->
+        <div class="card p-0 border-none shadow-2 border-round-xl overflow-hidden">
+            <p-table #dt [value]="logs" [rows]="10" [paginator]="true" [rowsPerPageOptions]="[10,20,30]"
+                [globalFilterFields]="['companies.name', 'vehicles.plate_number', 'date']" responsiveLayout="scroll"
+                [rowHover]="true" dataKey="id" [loading]="loading" styleClass="p-datatable-sm"
+                currentPageReportTemplate="Toplam {totalRecords} kayıttan {first} ile {last} arası gösteriliyor"
+                [showCurrentPageReport]="true">
+
+                <ng-template pTemplate="caption">
+                    <div
+                        class="flex flex-column md:flex-row justify-content-between align-items-center p-3 surface-0 border-bottom-1 surface-border gap-2">
+                        <div class="flex align-items-center gap-2">
+                            <i class="pi pi-list text-500"></i>
+                            <span class="text-700 font-medium">Günlük Kayıt Listesi</span>
+                        </div>
+                        <div class="flex align-items-center gap-2">
+                            <span class="p-input-icon-left">
+                                <i class="pi pi-search text-500"></i>
+                                <input pInputText type="text"
+                                    (input)="dt.filterGlobal($any($event.target).value, 'contains')"
+                                    placeholder="Kayıt Ara..." class="w-full md:w-20rem border-round-lg pl-5" />
+                            </span>
+                            <button pButton pRipple icon="pi pi-refresh"
+                                class="p-button-text p-button-secondary p-button-rounded" (click)="loadMonthData()"
+                                pTooltip="Listeyi Yenile"></button>
+                        </div>
+                    </div>
+                </ng-template>
+
+                <ng-template pTemplate="header">
+                    <tr class="bg-gray-50 text-600 uppercase text-sm font-semibold">
+                        <th style="width: 3rem">#</th>
+                        <th pSortableColumn="date" class="white-space-nowrap">Tarih <p-sortIcon
+                                field="date"></p-sortIcon></th>
+                        <th pSortableColumn="companies.name">Şirket <p-sortIcon field="companies.name"></p-sortIcon>
+                        </th>
+                        <th pSortableColumn="vehicles.plate_number">Araç <p-sortIcon
+                                field="vehicles.plate_number"></p-sortIcon></th>
+                        <th pSortableColumn="is_overtime">Mesai <p-sortIcon field="is_overtime"></p-sortIcon></th>
+                        <th pSortableColumn="calculated_fee">Hakediş <p-sortIcon field="calculated_fee"></p-sortIcon>
+                        </th>
+                        <th *ngIf="isAdmin" pSortableColumn="profiles.email">Kullanıcı <p-sortIcon field="profiles.email"></p-sortIcon></th>
+                        <th class="text-right">İşlemler</th>
+                    </tr>
+                </ng-template>
+
+                <ng-template pTemplate="body" let-log let-i="rowIndex">
+                    <tr class="transition-colors transition-duration-200 hover:surface-hover">
+                        <td class="text-500 font-medium">{{i + 1}}</td>
+                        <td>
+                            <div class="font-medium text-900">{{log.date | date:'dd.MM.yyyy'}}</div>
+                        </td>
+                        <td class="text-600">{{log.companies?.name}}</td>
+                        <td class="text-600">{{log.vehicles?.plate_number}}</td>
+                        <td>
+                            <span *ngIf="log.is_overtime"
+                                class="inline-flex align-items-center px-2 py-1 border-round-lg bg-green-100 text-green-700 font-medium text-sm">
+                                <i class="pi pi-check-circle mr-1"></i>Evet
+                            </span>
+                            <span *ngIf="!log.is_overtime"
+                                class="inline-flex align-items-center px-2 py-1 border-round-lg bg-gray-100 text-gray-600 font-medium text-sm">
+                                <i class="pi pi-times-circle mr-1"></i>Hayır
+                            </span>
+                        </td>
+                        <td>
+                            <span class="font-bold text-primary text-lg">{{log.calculated_fee |
+                                currency:'TRY':'symbol-narrow'}}</span>
+                        </td>
+                        <td *ngIf="isAdmin" class="text-600">
+                            <div class="flex align-items-center gap-2">
+                                <span class="w-2rem h-2rem border-circle bg-primary-100 flex align-items-center justify-content-center text-primary-600 font-bold text-sm">
+                                    {{(log.profiles?.full_name || log.profiles?.email || 'U')[0].toUpperCase()}}
+                                </span>
+                                <div class="flex flex-column">
+                                    <span class="text-sm font-medium">{{log.profiles?.full_name || '-'}}</span>
+                                    <span class="text-xs text-500">{{log.profiles?.email || '-'}}</span>
+                                </div>
+                            </div>
+                        </td>
+                        <td class="text-right">
+                            <div class="flex justify-content-end gap-2">
+                                <button pButton pRipple icon="pi pi-trash"
+                                    class="p-button-rounded p-button-text p-button-danger" (click)="deleteLog(log)"
+                                    pTooltip="Sil"></button>
+                            </div>
+                        </td>
+                    </tr>
+                </ng-template>
+
+                <ng-template pTemplate="emptymessage">
+                    <tr>
+                        <td [attr.colspan]="isAdmin ? 8 : 7" class="text-center p-5">
+                            <i class="pi pi-calendar text-5xl text-400 mb-3"></i>
+                            <div class="text-700 font-medium">Bu ay için kayıt bulunamadı.</div>
+                        </td>
+                    </tr>
+                </ng-template>
+
+                <!-- Footer with monthly total -->
+                <ng-template pTemplate="summary" *ngIf="logs.length > 0">
+                    <div class="flex justify-content-between align-items-center p-3 bg-gray-50">
+                        <span class="font-semibold text-700">
+                            <i class="pi pi-info-circle mr-2"></i>Bu ayda toplam {{logs.length}} kayıt var
+                        </span>
+                        <span class="font-bold text-xl text-primary">
+                            Toplam: {{grandTotal | currency:'TRY':'symbol-narrow'}}
+                        </span>
+                    </div>
+                </ng-template>
+            </p-table>
+        </div>
+
+        <!-- Add Dialog -->
+        <p-dialog [(visible)]="logDialog" [style]="{width: '500px'}" header="Servis Kaydı Ekle" [modal]="true"
+            class="p-fluid" [draggable]="false" [resizable]="false">
+            <ng-template pTemplate="content">
+                <form [formGroup]="logForm" class="flex flex-column gap-4 pt-3">
+
+                    <!-- Date -->
+                    <div class="field mb-0">
+                        <label for="date" class="block text-900 font-semibold mb-2">Tarih</label>
+                        <p-datepicker id="date" formControlName="date" dateFormat="dd.mm.yy" [showIcon]="true"
+                            appendTo="body" (onSelect)="calculateFee()" styleClass="w-full" 
+                            [showButtonBar]="false" [showOnFocus]="false" 
+                            inputStyleClass="w-full" placeholder="Tarih seçiniz"></p-datepicker>
+                    </div>
+
+                    <!-- Company -->
+                    <div class="field mb-0">
+                        <label for="company_id" class="block text-900 font-semibold mb-2">Şirket</label>
+                        <p-select id="company_id" [options]="companies" formControlName="company_id" optionLabel="name"
+                            optionValue="id" placeholder="Şirket Seçiniz" [filter]="true" (onChange)="calculateFee()"
+                            styleClass="w-full"></p-select>
+                    </div>
+
+                    <!-- Vehicle -->
+                    <div class="field mb-0">
+                        <label for="vehicle_id" class="block text-900 font-semibold mb-2">Araç</label>
+                        <p-select id="vehicle_id" [options]="vehicles" formControlName="vehicle_id"
+                            optionLabel="plate_number" optionValue="id" placeholder="Araç Seçiniz" [filter]="true"
+                            (onChange)="calculateFee()" styleClass="w-full"></p-select>
+                    </div>
+
+                    <!-- Overtime Checkbox -->
+                    <div class="flex align-items-center gap-2">
+                        <p-checkbox id="is_overtime" formControlName="is_overtime" [binary]="true" inputId="binary"
+                            (onChange)="calculateFee()"></p-checkbox>
+                        <label for="binary" class="text-900 font-medium cursor-pointer">Fazla Mesai
+                            <span *ngIf="currentOvertimeRate > 0" class="text-green-500 font-bold ml-1">
+                                (+{{currentOvertimeRate | currency:'TRY':'symbol-narrow'}})
+                            </span>
+                        </label>
+                    </div>
+
+                    <!-- Calculated Fee -->
+                    <div class="field mb-0">
+                        <label for="calculated_fee" class="block text-900 font-semibold mb-2">Hakediş Tutarı</label>
+                        <div class="flex gap-2">
+                            <p-inputNumber id="calculated_fee" formControlName="calculated_fee" mode="currency"
+                                currency="TRY" locale="tr-TR" [readonly]="false"
+                                styleClass="flex-grow-1"></p-inputNumber>
+                            <button type="button" pButton label="Hesapla" icon="pi pi-refresh"
+                                class="p-button-outlined p-button-secondary" (click)="calculateFee()"></button>
+                        </div>
+                        <small class="block mt-2 text-500">
+                            Bu tutar otomatik hesaplanır, ancak manuel müdahale edilebilir.
+                        </small>
+                    </div>
+
+                    <!-- Description -->
+                    <div class="field mb-0">
+                        <label for="description" class="block text-900 font-semibold mb-2">Açıklama</label>
+                        <textarea id="description" pInputTextarea formControlName="description" rows="3" class="w-full"
+                            placeholder="Varsa ek notlar..."></textarea>
+                    </div>
+                </form>
+            </ng-template>
+
+            <ng-template pTemplate="footer">
+                <div class="flex justify-content-end gap-2 border-top-1 surface-border pt-3">
+                    <button pButton pRipple label="İptal" icon="pi pi-times"
+                        class="p-button-text p-button-secondary border-round-lg" (click)="hideDialog()"></button>
+                    <button pButton pRipple label="Kaydet" icon="pi pi-check"
+                        class="p-button-primary border-round-lg px-4" (click)="saveLog()"></button>
+                </div>
+            </ng-template>
+        </p-dialog>
+    </div>
+</div>

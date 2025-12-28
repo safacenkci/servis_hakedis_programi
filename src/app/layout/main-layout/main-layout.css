@@ -1,0 +1,25 @@
+/* Custom Sidebar Links (Replaced p-menu) */
+.sidebar-link {
+    color: #475569 !important;
+    /* Default Slate 600 */
+    text-decoration: none !important;
+}
+
+.sidebar-link:hover {
+    background-color: #f1f5f9 !important;
+    color: #0f172a !important;
+    /* Dark Slate 900 on Hover */
+}
+
+.sidebar-link.text-primary-600 {
+    /* Active State handled by Angular class */
+    color: #10b981 !important;
+    /* Emerald 500 */
+    background-color: #ecfdf5 !important;
+    /* Emerald 50 */
+    font-weight: 600 !important;
+}
+
+.sidebar-link i {
+    color: inherit !important;
+}

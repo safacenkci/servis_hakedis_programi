@@ -1,0 +1,17 @@
+/* Dark Bar Fix for Companies Table */
+.p-datatable .p-datatable-caption {
+    background-color: #ffffff !important;
+    border-bottom: 1px solid #e2e8f0 !important;
+    padding: 1rem !important;
+    color: #1e293b !important;
+}
+
+.p-input-icon-left > i {
+    z-index: 10;
+    color: #64748b !important;
+}
+
+.p-inputtext:enabled:focus {
+    box-shadow: 0 0 0 2px rgba(16, 185, 129, 0.2);
+    border-color: #10b981 !important;
+}

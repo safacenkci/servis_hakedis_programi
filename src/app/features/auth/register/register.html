@@ -1,0 +1,86 @@
+<div class="auth-container">
+    <div class="auth-wrapper">
+        <div class="auth-card">
+            <!-- Header -->
+            <div class="auth-header">
+                <h1 class="auth-title">Hesap Oluştur</h1>
+                <p class="auth-subtitle">Yeni bir hesapla başlayın</p>
+            </div>
+
+            <!-- Form -->
+            <form [formGroup]="registerForm" (ngSubmit)="onRegister()" class="auth-form">
+                <!-- Full Name Field -->
+                <div class="form-field">
+                    <label for="fullName" class="form-label">Ad Soyad</label>
+                    <div class="input-wrapper">
+                        <i class="pi pi-user input-icon"></i>
+                        <input 
+                            id="fullName" 
+                            type="text" 
+                            pInputText 
+                            class="form-input" 
+                            formControlName="fullName"
+                            placeholder="Adınız Soyadınız"
+                            autocomplete="name">
+                    </div>
+                    <small *ngIf="registerForm.get('fullName')?.invalid && registerForm.get('fullName')?.touched"
+                        class="form-error">Ad Soyad gereklidir.</small>
+                </div>
+
+                <!-- Email Field -->
+                <div class="form-field">
+                    <label for="email" class="form-label">E-posta Adresi</label>
+                    <div class="input-wrapper">
+                        <i class="pi pi-envelope input-icon"></i>
+                        <input 
+                            id="email" 
+                            type="email" 
+                            pInputText 
+                            class="form-input" 
+                            formControlName="email"
+                            placeholder="ornek@email.com"
+                            autocomplete="email">
+                    </div>
+                    <small *ngIf="registerForm.get('email')?.invalid && registerForm.get('email')?.touched"
+                        class="form-error">Geçerli bir e-posta adresi giriniz.</small>
+                </div>
+
+                <!-- Password Field -->
+                <div class="form-field">
+                    <label for="password" class="form-label">Şifre</label>
+                    <div class="input-wrapper">
+                        <i class="pi pi-lock input-icon"></i>
+                        <p-password 
+                            id="password" 
+                            formControlName="password" 
+                            [toggleMask]="true" 
+                            styleClass="w-full password-input"
+                            [inputStyle]="{'width':'100%', 'padding-left': '2.75rem'}"
+                            [feedback]="true" 
+                            placeholder="••••••••"
+                            autocomplete="new-password">
+                        </p-password>
+                    </div>
+                    <small *ngIf="registerForm.get('password')?.invalid && registerForm.get('password')?.touched"
+                        class="form-error">Şifre en az 6 karakter olmalıdır.</small>
+                </div>
+
+                <!-- Submit Button -->
+                <button 
+                    pButton 
+                    pRipple 
+                    label="Kayıt Ol" 
+                    class="auth-button" 
+                    type="submit"
+                    [loading]="loading">
+                </button>
+
+                <!-- Login Link -->
+                <div class="auth-footer">
+                    <span class="auth-footer-text">Hesabınız var mı?</span>
+                    <a routerLink="/login" class="auth-link">Giriş Yap</a>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>

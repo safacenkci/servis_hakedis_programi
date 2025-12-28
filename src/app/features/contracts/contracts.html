@@ -1,0 +1,318 @@
+<div class="grid">
+  <div class="col-12">
+    <!-- Page Header -->
+    <div class="flex flex-column md:flex-row md:justify-content-between md:align-items-center mb-4">
+      <div>
+        <h1 class="text-3xl font-bold text-900 mb-2">Sözleşmeler</h1>
+        <span class="text-500 font-medium"
+          >Aktif ve geçmiş sözleşmeleri buradan yönetebilirsiniz.</span
+        >
+      </div>
+      <div class="mt-3 md:mt-0">
+        <button
+          pButton
+          pRipple
+          label="Yeni Sözleşme Ekle"
+          icon="pi pi-plus"
+          class="p-button-primary border-round-lg shadow-2"
+          (click)="openNew()"
+        ></button>
+      </div>
+    </div>
+
+    <!-- Table Card -->
+    <div class="card p-0 border-none shadow-2 border-round-xl overflow-hidden">
+      <p-table
+        #dt
+        [value]="contracts"
+        [rows]="10"
+        [paginator]="true"
+        [rowsPerPageOptions]="[10, 20, 30]"
+        [globalFilterFields]="['companies.name', 'vehicles.plate_number']"
+        responsiveLayout="scroll"
+        [rowHover]="true"
+        dataKey="id"
+        [loading]="loading"
+        styleClass="p-datatable-sm"
+        currentPageReportTemplate="Toplam {totalRecords} kayıttan {first} ile {last} arası gösteriliyor"
+        [showCurrentPageReport]="true"
+      >
+        <ng-template pTemplate="caption">
+          <div
+            class="flex justify-content-between align-items-center p-3 surface-0 border-bottom-1 surface-border"
+          >
+            <span class="p-input-icon-left w-full md:w-auto">
+              <i class="pi pi-search text-500"></i>
+              <input
+                pInputText
+                type="text"
+                (input)="dt.filterGlobal($any($event.target).value, 'contains')"
+                placeholder="Sözleşme Ara..."
+                class="w-full md:w-20rem border-round-lg pl-5"
+              />
+            </span>
+            <button
+              pButton
+              pRipple
+              icon="pi pi-refresh"
+              class="p-button-text p-button-secondary p-button-rounded"
+              (click)="loadData()"
+              pTooltip="Listeyi Yenile"
+            ></button>
+          </div>
+        </ng-template>
+
+        <ng-template pTemplate="header">
+          <tr class="bg-gray-50 text-600 uppercase text-sm font-semibold">
+            <th style="width: 3rem">#</th>
+            <th pSortableColumn="companies.name" class="white-space-nowrap">
+              Şirket <p-sortIcon field="companies.name"></p-sortIcon>
+            </th>
+            <th pSortableColumn="vehicles.plate_number">
+              Araç <p-sortIcon field="vehicles.plate_number"></p-sortIcon>
+            </th>
+            <th pSortableColumn="daily_rate">
+              Günlük Ücret <p-sortIcon field="daily_rate"></p-sortIcon>
+            </th>
+            <th pSortableColumn="start_date">
+              Başlangıç <p-sortIcon field="start_date"></p-sortIcon>
+            </th>
+            <th pSortableColumn="end_date">Bitiş <p-sortIcon field="end_date"></p-sortIcon></th>
+            <th *ngIf="isAdmin" pSortableColumn="profiles.email">Kullanıcı <p-sortIcon field="profiles.email"></p-sortIcon></th>
+            <th class="text-right">İşlemler</th>
+          </tr>
+        </ng-template>
+
+        <ng-template pTemplate="body" let-contract let-i="rowIndex">
+          <tr class="transition-colors transition-duration-200 hover:surface-hover">
+            <td class="text-500 font-medium">{{ i + 1 }}</td>
+            <td>
+              <div class="font-medium text-900">{{ contract.companies?.name }}</div>
+            </td>
+            <td class="text-600">
+              <span *ngIf="contract.vehicle_id; else allVehicles">{{
+                contract.vehicles?.plate_number
+              }}</span>
+              <ng-template #allVehicles
+                ><span class="text-500 font-italic">Tüm Araçlar</span></ng-template
+              >
+            </td>
+            <td>
+              <span class="font-semibold text-primary">{{
+                contract.daily_rate | currency : 'TRY' : 'symbol-narrow'
+              }}</span>
+            </td>
+            <td class="text-600">{{ contract.start_date | date : 'dd.MM.yyyy' }}</td>
+            <td class="text-600">
+              <span *ngIf="contract.end_date; else ongoing">{{
+                contract.end_date | date : 'dd.MM.yyyy'
+              }}</span>
+              <ng-template #ongoing>
+                <span class="text-green-500 font-medium">Devam Ediyor</span>
+              </ng-template>
+            </td>
+            <td *ngIf="isAdmin" class="text-600">
+              <div class="flex align-items-center gap-2">
+                <span class="w-2rem h-2rem border-circle bg-primary-100 flex align-items-center justify-content-center text-primary-600 font-bold text-sm">
+                  {{(contract.profiles?.full_name || contract.profiles?.email || 'U')[0].toUpperCase()}}
+                </span>
+                <div class="flex flex-column">
+                  <span class="text-sm font-medium">{{contract.profiles?.full_name || '-'}}</span>
+                  <span class="text-xs text-500">{{contract.profiles?.email || '-'}}</span>
+                </div>
+              </div>
+            </td>
+            <td class="text-right">
+              <div class="flex justify-content-end gap-2">
+                <button
+                  pButton
+                  pRipple
+                  icon="pi pi-pencil"
+                  class="p-button-rounded p-button-text p-button-info"
+                  (click)="editContract(contract)"
+                  pTooltip="Düzenle"
+                ></button>
+                <button
+                  pButton
+                  pRipple
+                  icon="pi pi-trash"
+                  class="p-button-rounded p-button-text p-button-danger"
+                  (click)="deleteContract(contract)"
+                  pTooltip="Sil"
+                ></button>
+              </div>
+            </td>
+          </tr>
+        </ng-template>
+
+        <ng-template pTemplate="emptymessage">
+          <tr>
+            <td [attr.colspan]="isAdmin ? 8 : 7" class="text-center p-5">
+              <i class="pi pi-file text-5xl text-400 mb-3"></i>
+              <div class="text-700 font-medium">Henüz kayıtlı sözleşme yok.</div>
+            </td>
+          </tr>
+        </ng-template>
+      </p-table>
+    </div>
+
+    <!-- Edit Dialog -->
+    <p-dialog
+      [(visible)]="contractDialog"
+      [style]="{ width: '550px' }"
+      header="Sözleşme Bilgileri"
+      [modal]="true"
+      class="p-fluid"
+      [draggable]="false"
+      [resizable]="false"
+    >
+      <ng-template pTemplate="content">
+        <form [formGroup]="contractForm" class="flex flex-column gap-4 pt-3">
+          <!-- Company -->
+          <div class="field mb-0">
+            <label for="company_id" class="block text-900 font-semibold mb-2">Şirket</label>
+            <p-select
+              id="company_id"
+              [options]="companies"
+              formControlName="company_id"
+              optionLabel="name"
+              optionValue="id"
+              placeholder="Şirket Seçiniz"
+              [filter]="true"
+              styleClass="w-full"
+            ></p-select>
+            <small
+              class="p-error block mt-2"
+              *ngIf="submitted && contractForm.get('company_id')?.invalid"
+            >
+              Şirket seçimi zorunludur.
+            </small>
+          </div>
+
+          <!-- Vehicle -->
+          <div class="field mb-0">
+            <label for="vehicle_id" class="block text-900 font-semibold mb-2"
+              >Araç (Opsiyonel - Boş ise tüm araçlar)</label
+            >
+            <p-select
+              id="vehicle_id"
+              [options]="vehicles"
+              formControlName="vehicle_id"
+              optionLabel="plate_number"
+              optionValue="id"
+              placeholder="Tüm Araçlar İçin Geçerli"
+              [showClear]="true"
+              [filter]="true"
+              styleClass="w-full"
+            ></p-select>
+          </div>
+
+          <!-- Rates -->
+          <div class="grid">
+            <div class="col-6">
+              <div class="field mb-0">
+                <label for="daily_rate" class="block text-900 font-semibold mb-2"
+                  >Günlük Ücret (TL)</label
+                >
+                <p-inputNumber
+                  id="daily_rate"
+                  formControlName="daily_rate"
+                  mode="currency"
+                  currency="TRY"
+                  locale="tr-TR"
+                  [required]="true"
+                  styleClass="w-full"
+                ></p-inputNumber>
+                <small
+                  class="p-error block mt-2"
+                  *ngIf="submitted && contractForm.get('daily_rate')?.invalid"
+                >
+                  Ücret zorunludur.
+                </small>
+              </div>
+            </div>
+            <div class="col-6">
+              <div class="field mb-0">
+                <label for="overtime_rate" class="block text-900 font-semibold mb-2"
+                  >Mesai Ücreti (TL)</label
+                >
+                <p-inputNumber
+                  id="overtime_rate"
+                  formControlName="overtime_rate"
+                  mode="currency"
+                  currency="TRY"
+                  locale="tr-TR"
+                  styleClass="w-full"
+                ></p-inputNumber>
+              </div>
+            </div>
+          </div>
+
+          <!-- Dates -->
+          <div class="field mb-0">
+            <label for="start_date" class="block text-900 font-semibold mb-2"
+              >Başlangıç Tarihi</label
+            >
+            <p-datepicker
+              id="start_date"
+              formControlName="start_date"
+              dateFormat="dd.mm.yy"
+              [showIcon]="true"
+              appendTo="body"
+              styleClass="w-full"
+              [showButtonBar]="false"
+              [showOnFocus]="false"
+              inputStyleClass="w-full"
+              placeholder="Tarih seçiniz"
+            ></p-datepicker>
+            <small
+              class="p-error block mt-2"
+              *ngIf="submitted && contractForm.get('start_date')?.invalid"
+            >
+              Başlangıç tarihi zorunludur.
+            </small>
+          </div>
+
+          <div class="field mb-0">
+            <label for="end_date" class="block text-900 font-semibold mb-2"
+              >Bitiş Tarihi (Opsiyonel)</label
+            >
+            <p-datepicker
+              id="end_date"
+              formControlName="end_date"
+              dateFormat="dd.mm.yy"
+              [showIcon]="true"
+              appendTo="body"
+              styleClass="w-full"
+              [showButtonBar]="false"
+              [showOnFocus]="false"
+              inputStyleClass="w-full"
+              placeholder="Tarih seçiniz"
+            ></p-datepicker>
+          </div>
+        </form>
+      </ng-template>
+
+      <ng-template pTemplate="footer">
+        <div class="flex justify-content-end gap-2 border-top-1 surface-border pt-3">
+          <button
+            pButton
+            pRipple
+            label="İptal"
+            icon="pi pi-times"
+            class="p-button-text p-button-secondary border-round-lg"
+            (click)="hideDialog()"
+          ></button>
+          <button
+            pButton
+            pRipple
+            label="Kaydet"
+            icon="pi pi-check"
+            class="p-button-primary border-round-lg px-4"
+            (click)="saveContract()"
+          ></button>
+        </div>
+      </ng-template>
+    </p-dialog>
+  </div>
+</div>

@@ -1,0 +1,121 @@
+<div class="flex flex-column gap-5">
+
+    <!-- Welcome Header -->
+    <div class="surface-card p-4 border-round-xl shadow-1 flex align-items-center justify-content-between">
+        <div>
+            <h1 class="text-3xl font-bold text-900 mb-1">Anasayfa</h1>
+            <span class="text-500 font-medium">Sayın <strong class="text-700">{{ userName }}</strong>, sistemin genel
+                durumunu buradan takip edebilirsiniz.</span>
+        </div>
+        <div class="hidden md:flex align-items-center gap-2">
+            <span class="text-sm text-500 bg-blue-50 px-3 py-2 border-round-2xl">
+                <i class="pi pi-calendar mr-2 text-blue-500"></i>
+                {{ todayDate | date:'d MMMM y, EEEE' }}
+            </span>
+        </div>
+    </div>
+
+    <!-- Stats Grid -->
+    <div class="grid">
+        <!-- Companies -->
+        <div class="col-12 md:col-6 lg:col-3">
+            <div
+                class="surface-card p-4 border-round-xl shadow-1 hover:shadow-3 transition-all transition-duration-300 h-full border-left-3 border-blue-500">
+                <div class="flex justify-content-between mb-3">
+                    <div>
+                        <span class="block text-500 font-medium mb-3">Şirketler</span>
+                        <div class="text-900 font-bold text-4xl" *ngIf="!loading; else loadingStats">{{ counts.companies
+                            }}</div>
+                        <ng-template #loadingStats><i class="pi pi-spin pi-spinner text-2xl"></i></ng-template>
+                    </div>
+                    <div class="flex align-items-center justify-content-center bg-blue-100 border-round-lg"
+                        style="width: 3rem; height: 3rem">
+                        <i class="pi pi-building text-blue-500 text-xl"></i>
+                    </div>
+                </div>
+                <span class="text-blue-500 font-medium font-bold"><i
+                        class="pi pi-plus-circle text-xs mr-1"></i>Aktif</span>
+                <span class="text-500"> müşteri kaydı</span>
+            </div>
+        </div>
+
+        <!-- Vehicles -->
+        <div class="col-12 md:col-6 lg:col-3">
+            <div
+                class="surface-card p-4 border-round-xl shadow-1 hover:shadow-3 transition-all transition-duration-300 h-full border-left-3 border-orange-500">
+                <div class="flex justify-content-between mb-3">
+                    <div>
+                        <span class="block text-500 font-medium mb-3">Araçlar</span>
+                        <div class="text-900 font-bold text-4xl" *ngIf="!loading; else loadingStats">{{ counts.vehicles
+                            }}</div>
+                    </div>
+                    <div class="flex align-items-center justify-content-center bg-orange-100 border-round-lg"
+                        style="width: 3rem; height: 3rem">
+                        <i class="pi pi-car text-orange-500 text-xl"></i>
+                    </div>
+                </div>
+                <span class="text-orange-500 font-medium font-bold"><i
+                        class="pi pi-check-circle text-xs mr-1"></i>Sistemde</span>
+                <span class="text-500"> kayıtlı araç</span>
+            </div>
+        </div>
+
+        <!-- Contracts -->
+        <div class="col-12 md:col-6 lg:col-3">
+            <div
+                class="surface-card p-4 border-round-xl shadow-1 hover:shadow-3 transition-all transition-duration-300 h-full border-left-3 border-purple-500">
+                <div class="flex justify-content-between mb-3">
+                    <div>
+                        <span class="block text-500 font-medium mb-3">Aktif Sözleşmeler</span>
+                        <div class="text-900 font-bold text-4xl" *ngIf="!loading; else loadingStats">{{ counts.contracts
+                            }}</div>
+                    </div>
+                    <div class="flex align-items-center justify-content-center bg-purple-100 border-round-lg"
+                        style="width: 3rem; height: 3rem">
+                        <i class="pi pi-file text-purple-500 text-xl"></i>
+                    </div>
+                </div>
+                <span class="text-purple-500 font-medium font-bold"><i class="pi pi-sync text-xs mr-1"></i>Devam
+                    Eden</span>
+                <span class="text-500"> sözleşme</span>
+            </div>
+        </div>
+
+        <!-- Daily Logs -->
+        <div class="col-12 md:col-6 lg:col-3">
+            <div
+                class="surface-card p-4 border-round-xl shadow-1 hover:shadow-3 transition-all transition-duration-300 h-full border-left-3 border-cyan-500">
+                <div class="flex justify-content-between mb-3">
+                    <div>
+                        <span class="block text-500 font-medium mb-3">Toplam Kayıtlar</span>
+                        <div class="text-900 font-bold text-4xl" *ngIf="!loading; else loadingStats">{{ counts.logs }}
+                        </div>
+                    </div>
+                    <div class="flex align-items-center justify-content-center bg-cyan-100 border-round-lg"
+                        style="width: 3rem; height: 3rem">
+                        <i class="pi pi-calendar text-cyan-500 text-xl"></i>
+                    </div>
+                </div>
+                <span class="text-cyan-500 font-medium font-bold">{{ counts.logs }}</span>
+                <span class="text-500"> adet sefer girişi</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- Empty State / Placeholder Illustration -->
+    <div *ngIf="!loading && counts.companies === 0 && counts.vehicles === 0"
+        class="surface-card p-6 border-round-xl shadow-1 text-center">
+        <div class="border-circle bg-gray-50 inline-flex align-items-center justify-content-center mb-4"
+            style="width: 100px; height: 100px">
+            <i class="pi pi-compass text-5xl text-400"></i>
+        </div>
+        <h2 class="text-900 font-bold mb-2">Sisteme Hoş Geldiniz!</h2>
+        <p class="text-600 mb-5 max-w-30rem mx-auto line-height-3">
+            Henüz hiç veri girişi yapmadınız. Başlamak için sol menüden önce <b>Şirketler</b> ekleyin, ardından
+            <b>Araçlar</b> tanımlayın.
+        </p>
+        <button pButton label="Şirket Ekle" icon="pi pi-plus" class="p-button-outlined mr-2"
+            routerLink="/companies"></button>
+    </div>
+
+</div>
